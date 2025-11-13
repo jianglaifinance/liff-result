@@ -1,58 +1,34 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  <title>審核結果</title>
-  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-  <style>
-    body {
-      font-family: sans-serif;
-      background-color: #f7f7f7;
-      padding: 20px;
-      text-align: center;
-    }
-    .card {
-      background: white;
-      padding: 20px;
-      border-radius: 16px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      display: inline-block;
-    }
-    button {
-      margin-top: 20px;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 8px;
-      background-color: #00B900;
-      color: white;
-      font-size: 16px;
-    }
-  </style>
-</head>
-<body>
-  <div class="card">
-    <h2>您好，<span id="name"></span></h2>
-    <p>以下是您的審核結果：</p>
-    <h3 id="result">資料讀取中...</h3>
-    <button id="close">返回 LINE</button>
-  </div>
+  <head>
+    <meta charset="utf-8">
+    <title>AI 智能貸款預審</title>
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  </head>
+  <body>
+    <h2>正在開啟預審表單，請稍候...</h2>
 
-  <script>
-    async function main() {
-      await liff.init({ liffId: "2008457662-ND0voLP2" }); // 替換成你的 LIFF ID
-      const profile = await liff.getProfile();
-      document.getElementById("name").textContent = profile.displayName;
+    <script>
+      // 🟢 把這裡換成你的 LIFF ID（在 LINE Developers → LIFF → LIFF app）
+      const liffId = "2008457662-ND0voLP2";
 
-      // 假設我們從網址帶一個參數 result (例：?result=通過)
-      const urlParams = new URLSearchParams(window.location.search);
-      const result = urlParams.get('result') || "目前尚無審核結果";
-      document.getElementById("result").textContent = result;
+      async function main() {
+        await liff.init({ liffId });
+        if (!liff.isLoggedIn()) {
+          liff.login();
+        } else {
+          const profile = await liff.getProfile();
+          const userId = profile.userId;
 
-      document.getElementById("close").addEventListener("click", () => {
-        liff.closeWindow();
-      });
-    }
-    main();
-  </script>
-</body>
+          // 🟢 這裡換成你的 Google 表單預填連結
+          const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSdWitI3r0MkohRTiyDZPvjAyQ5sZywaSGcy8dqGIYCAdSNXGA/viewform?usp=preview" + userId;
+          
+          // 自動導向到 Google 表單
+          window.location.href = formUrl;
+        }
+      }
+
+      main();
+    </script>
+  </body>
 </html>
