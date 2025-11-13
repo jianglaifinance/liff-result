@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>AI 預審系統載入中...</title>
+  <script>
+    // 你的 Google 表單預填網址
+    const googleFormBase = "https://docs.google.com/forms/d/e/1FAIpQLSdWitI3r0MkohRTiyDZPvjAyQ5sZywaSGcy8dqGIYCAdSNXGA/viewform?usp=pp_url&entry.1601256413=";
+
+    window.onload = () => {
+      const params = new URLSearchParams(window.location.search);
+      const userId = params.get("uid");
+
+      if (userId) {
+        const targetUrl = googleFormBase + encodeURIComponent(userId);
+        window.location.replace(targetUrl);
+      } else {
+        document.body.innerHTML = "<h3>找不到使用者 ID，請重新開啟 LINE 預審系統。</h3>";
+      }
+    };
+  </script>
+</head>
+<body style="font-family:sans-serif; text-align:center; margin-top:50px;">
+  <h2>載入中，請稍候...</h2>
+</body>
+</html>
