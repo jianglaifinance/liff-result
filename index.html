@@ -1,34 +1,47 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>AI 智能貸款預審</title>
-    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-  </head>
-  <body>
-    <h2>正在開啟預審表單，請稍候...</h2>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 智能貸款預審</title>
+</head>
+<body style="font-family: 'Noto Sans TC', sans-serif; text-align:center; margin-top:100px;">
+  <h2>正在開啟 AI 貸款預審系統...</h2>
+  <p>請稍候，我們正在連接您的 LINE 資料。</p>
 
-    <script>
-      // 🟢 把這裡換成你的 LIFF ID（在 LINE Developers → LIFF → LIFF app）
-      const liffId = "2008457662-ND0voLP2";
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <script>
+    async function main() {
+      try {
+        // 初始化 LIFF
+        await liff.init({ liffId: "2008457662-ND0voLP2" });
 
-      async function main() {
-        await liff.init({ liffId });
+        // 如果沒登入，先登入 LINE
         if (!liff.isLoggedIn()) {
           liff.login();
-        } else {
-          const profile = await liff.getProfile();
-          const userId = profile.userId;
-
-          // 🟢 這裡換成你的 Google 表單預填連結
-          const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSdWitI3r0MkohRTiyDZPvjAyQ5sZywaSGcy8dqGIYCAdSNXGA/viewform?usp=preview" + userId;
-          
-          // 自動導向到 Google 表單
-          window.location.href = formUrl;
+          return;
         }
-      }
 
-      main();
-    </script>
-  </body>
+        // 抓取 LINE 使用者資料
+        const profile = await liff.getProfile();
+        const userId = profile.userId;
+
+        // 你的 Google 表單網址（含 entry. 欄位）
+        const googleFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSdWitI3r0MkohRTiyDZPvjAyQ5sZywaSGcy8dqGIYCAdSNXGA/viewform";
+
+        // 自動把 LINE userId 帶進表單中
+        const fullUrl = `${googleFormUrl}?usp=pp_url&entry.1601256413=${encodeURIComponent(userId)}`;
+
+        // 導向表單
+        window.location.href = fullUrl;
+
+      } catch (err) {
+        document.body.innerHTML = "<h3>發生錯誤，請重新打開 LINE 聊天機器人。</h3><p>" + err.message + "</p>";
+        console.error(err);
+      }
+    }
+
+    main();
+  </script>
+</body>
 </html>
