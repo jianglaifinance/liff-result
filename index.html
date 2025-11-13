@@ -1,43 +1,37 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI 智能貸款預審</title>
+  <title>AI預審系統</title>
 </head>
-<body style="font-family: 'Noto Sans TC', sans-serif; text-align:center; margin-top:100px;">
-  <h2>正在開啟 AI 貸款預審系統...</h2>
-  <p>請稍候，我們正在連接您的 LINE 資料。</p>
-
+<body>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <script>
+    // === LIFF 初始化 ===
     async function main() {
       try {
-        // 初始化 LIFF
         await liff.init({ liffId: "2008457662-ND0voLP2" });
 
-        // 如果沒登入，先登入 LINE
         if (!liff.isLoggedIn()) {
           liff.login();
           return;
         }
 
-        // 抓取 LINE 使用者資料
         const profile = await liff.getProfile();
         const userId = profile.userId;
+        console.log("✅ LINE User ID:", userId);
 
-        // 你的 Google 表單網址（含 entry. 欄位）
-        const googleFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSdWitI3r0MkohRTiyDZPvjAyQ5sZywaSGcy8dqGIYCAdSNXGA/viewform";
+        // === Google 表單網址 ===
+        const baseUrl = "https://docs.google.com/forms/d/e/1FAIpQLSdWitI3r0MkohRTiyDZPvjAyQ5sZywaSGcy8dqGIYCAdSNXGA/viewform";
+        const prefillUrl = `${baseUrl}?usp=pp_url&entry.1601256413=${encodeURIComponent(userId)}`;
 
-        // 自動把 LINE userId 帶進表單中
-        const fullUrl = `${googleFormUrl}?usp=pp_url&entry.1601256413=${encodeURIComponent(userId)}`;
-
-        // 導向表單
-        window.location.href = fullUrl;
+        // 導向帶入 LINE ID 的表單
+        window.location.href = prefillUrl;
 
       } catch (err) {
-        document.body.innerHTML = "<h3>發生錯誤，請重新打開 LINE 聊天機器人。</h3><p>" + err.message + "</p>";
-        console.error(err);
+        console.error("❌ LIFF 初始化失敗：", err);
+        document.body.innerHTML = "<h2>初始化失敗，請重新整理或聯絡客服。</h2>";
       }
     }
 
