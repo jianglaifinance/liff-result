@@ -27,7 +27,7 @@
         const prefillUrl = `${baseUrl}?usp=pp_url&entry.1601256413=${encodeURIComponent(userId)}`;
 
         // 導向帶入 LINE ID 的表單
-        window.location.href = prefillUrl;
+        window.location.href = "redirect.html?uid=" + userId;
 
       } catch (err) {
         console.error("❌ LIFF 初始化失敗：", err);
@@ -39,3 +39,4 @@
   </script>
 </body>
 </html>
+
